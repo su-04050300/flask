@@ -28,6 +28,12 @@ def get_sheet_data():
         scopes = ["https://www.googleapis.com/auth/spreadsheets"]
         creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
 
+       # 安全處理，不重複 loads
+        if isinstance(creds_json, str):
+            creds_dict = json.loads(creds_json)
+        else:
+            creds_dict = creds_json
+
         if not creds_json:
             print("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
             raise Exception("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
