@@ -9,6 +9,8 @@ import sys
 import gspread
 from google.oauth2.service_account import Credentials
 
+import tempfile
+
 app = Flask(__name__)
 
 # === 讀取 LINE 機密資訊 ===
