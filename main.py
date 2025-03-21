@@ -36,6 +36,15 @@ def get_sheet_data():
             print("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
             raise Exception("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
 
+
+        # 修復結尾多餘分號
+        if creds_json.strip().endswith(";"):
+            print("⚠️ 偵測到 GOOGLE_CREDENTIALS_JSON 結尾有多餘分號，已自動修復")
+            creds_json = creds_json.strip()[:-1]
+        
+        print("🔍 嘗試解析 GOOGLE_CREDENTIALS_JSON...")
+        creds_dict = json.loads(creds_json)
+
         print("🔍 嘗試解析 GOOGLE_CREDENTIALS_JSON...")
         try:
             creds_dict = json.loads(creds_json)
