@@ -25,7 +25,7 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET)
 # === 讀取 Google Sheets 歌詞 ===
 def get_sheet_data():
     try:
-        scopes ="https://www.googleapis.com/auth/spreadsheets"
+        scopes = ["https://www.googleapis.com/auth/spreadsheets","https://www.googleapis.com/auth/drive"]
         creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
         
 
@@ -59,8 +59,13 @@ def get_sheet_data():
         print("🧪 已解析 Key 清單：", creds_dict.keys())
 
         creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
-        client = gspread.authorize(creds)
-        print("✅ 成功轉換creds_dict")
+        print("🧪 嘗試使用 gspread 授權...")
+        try:
+            client = gspread.authorize(creds)
+            print("✅ 成功轉換creds_dict")
+        except Exception as e:
+            print(f"❌ gspread 授權失敗: {e}")
+            raise
 
         # 開啟指定試算表
         sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"
