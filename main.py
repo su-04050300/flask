@@ -28,27 +28,32 @@ def get_sheet_data():
         scopes = ["https://www.googleapis.com/auth/spreadsheets"]
         creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
 
-       # 安全處理，不重複 loads
-        if isinstance(creds_json, str):
-            creds_dict = json.loads(creds_json)
-        else:
-            creds_dict = creds_json
-
         if not creds_json:
             print("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
             raise Exception("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
 
-        # 安全處理 creds_json，不確定是否是 str
+        # 檢查格式並轉換
         creds_dict = json.loads(creds_json) if isinstance(creds_json, str) else creds_json
 
         creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
         client = gspread.authorize(creds)
 
+        # 開啟指定試算表
         sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"
         sheet = client.open_by_key(sheet_id).sheet1
 
-        print("✅ 成功取得 Google Sheets 資料")
-        return sheet.get_all_records()
+        print("✅ 成功連線 Google Sheets，開始讀取資料...")
+
+        records = sheet.get_all_records()
+
+        # 加入驗證印出
+        if records:
+            print(f"📄 已讀取 {len(records)} 筆歌詞資料")
+            print("📌 第一筆資料：", records[0])
+        else:
+            print("⚠️ 試算表為空（0 筆資料）")
+
+        return records
 
     except Exception as e:
         print(f"❌ Google Sheets 錯誤: {e}")
