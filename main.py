@@ -38,7 +38,7 @@ def get_sheet_data():
 
 
         # 修復結尾多餘分號
-        if creds_json.strip().endswith(";"):
+        if creds_json.strip().endswith(";}"):
             print("⚠️ 偵測到 GOOGLE_CREDENTIALS_JSON 結尾有多餘分號，已自動修復")
             creds_json = creds_json.strip()[:-1]
         
