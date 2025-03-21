@@ -36,10 +36,10 @@ def get_sheet_data():
         creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
         client = gspread.authorize(creds)
 
-        # ✅ 用試算表 ID 開啟（推薦做法）
+        # ✅ 用試算表 ID 開啟
         sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"
         sheet = client.open_by_key(sheet_id).sheet1
-
+        
         print("✅ 成功讀取試算表")
         return sheet.get_all_records()
 
