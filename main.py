@@ -30,9 +30,8 @@ def get_sheet_data():
         
 
         print("🔍 型別:", type(creds_json))
-        print("✅ GOOGLE_CREDENTIALS_JSON 已載入全部:",str(creds_json)[:-3])
-        creds_json = str(creds_json)[:-3]+'"}'
-        print("✅ 已載入全部creds_json",str(creds_json))
+        print("✅ GOOGLE_CREDENTIALS_JSON 已載入全部:",str(creds_json))
+
 		
         if not creds_json:
             print("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
