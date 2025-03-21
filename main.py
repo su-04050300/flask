@@ -76,6 +76,7 @@ def handle_message(event):
 
         records = get_sheet_data()
         print("🔹🔹🔹🔹")
+        print("get record form google sheet")
         print(records)
         for row in records:
             if keyword in row.get("歌詞", ""):
