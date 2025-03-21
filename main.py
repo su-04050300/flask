@@ -43,11 +43,24 @@ def get_sheet_data():
             creds_json = creds_json.strip()[:-1]
         
         print("🔍 嘗試解析 GOOGLE_CREDENTIALS_JSON...")
-        creds_dict = json.loads(creds_json)
+        print(f"🔹 第一個字元: {repr(creds_json[:1])}")
+        print(f"🔹 最後 10 個字元: {repr(creds_json[-10:])}")
+        print(f"🔹 JSON 長度: {len(creds_json)}")
+
+        
 
 
         try:
+            print("🔍 嘗試解析 GOOGLE_CREDENTIALS_JSON...")
             creds_dict = json.loads(creds_json)
+            # 確保 private_key 存在且正確
+            if "private_key" not in creds_dict:
+                print("❌ 錯誤：GOOGLE_CREDENTIALS_JSON 沒有 'private_key'")
+            elif not creds_dict["private_key"].startswith("-----BEGIN PRIVATE KEY-----"):
+                print(f"⚠️ 'private_key' 開頭異常: {repr(creds_dict['private_key'][:30])}")
+            else:
+                print("✅ 'private_key' 解析正常")
+                
         except json.JSONDecodeError as json_err:
             print("❌ JSON 格式錯誤！")
             print(creds_json[:500])  # 印前 500 字供檢查
