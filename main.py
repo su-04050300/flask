@@ -75,6 +75,7 @@ def handle_message(event):
             if keyword in column.get("歌詞", ""):
                 reply = f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'
                 break'''
+        print(records)
         for keyword in records:
             if keyword in column.get("歌詞", ""):
                 reply = f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'
