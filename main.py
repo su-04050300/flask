@@ -29,22 +29,21 @@ def get_sheet_data():
         creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
 
         if not creds_json:
-            print("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定", file=sys.stderr)
+            print("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
             raise Exception("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
 
         creds_dict = json.loads(creds_json)
         creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
         client = gspread.authorize(creds)
 
-        # ✅ 用試算表 ID 開啟
         sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"
         sheet = client.open_by_key(sheet_id).sheet1
-        
-        print("✅✅ 成功讀取試算表")
+
+        print("✅ 成功取得 Google Sheets 資料")
         return sheet.get_all_records()
 
     except Exception as e:
-        print(f"❌ Google Sheets 錯誤: {e}", file=sys.stderr)
+        print(f"❌ Google Sheets 錯誤: {e}")
         return []
 
 # === LINE Webhook 路由 ===
