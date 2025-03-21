@@ -42,6 +42,7 @@ def callback():
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
+		print("❌ LINE Webhook 簽名驗證失敗")
         abort(400)
 
     return "OK"
@@ -51,6 +52,7 @@ def callback():
 def handle_message(event):
     keyword = event.message.text.strip()
     records = get_sheet_data()
+	print("🔹 收到的訊息: ", user_message)  # 加入這行來 debug
 
     # 找第一筆包含關鍵字的歌詞
     for row in records:
