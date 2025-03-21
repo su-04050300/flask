@@ -40,7 +40,7 @@ def get_sheet_data():
         sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"
         sheet = client.open_by_key(sheet_id).sheet1
         
-        print("✅ 成功讀取試算表")
+        print("✅✅ 成功讀取試算表")
         return sheet.get_all_records()
 
     except Exception as e:
@@ -83,7 +83,7 @@ def handle_message(event):
                 break
            
         else:
-            reply = "找不到包含這個關鍵字的歌詞喔！!!"
+            reply = "找不到包含這個關鍵字的歌詞喔！"
 
         line_bot_api.reply_message(
             event.reply_token,
