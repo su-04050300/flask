@@ -46,7 +46,8 @@ def get_sheet_data():
             raise
 
         # 檢查格式並轉換
-        creds_dict = json.loads(creds_json) if isinstance(creds_json, str) else creds_json
+        creds_dict = json.loads(creds_json)
+        print("🧪 已解析 Key 清單：", creds_dict.keys())
 
         creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
         client = gspread.authorize(creds)
