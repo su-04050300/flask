@@ -74,7 +74,7 @@ def handle_message(event):
         for row in records:
             #if keyword in row.get("歌詞", ""):
             reply = f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'
-                break
+            break
         else:
             reply = "找不到包含這個關鍵字的歌詞喔！!!"
 
