@@ -75,10 +75,10 @@ def get_sheet_data():
 
         try:
             print(f"🔍 'private_key' 第一行: {creds_dict['private_key'].splitlines()[0]}")
-           ''' creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
-            print("🧪 已建立 Credentials 物件")
-            client = gspread.authorize(creds)
-            print("✅ 成功轉換 creds_dict 並建立 gspread client")'''
+            #creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+            #print("🧪 已建立 Credentials 物件")
+            #client = gspread.authorize(creds)
+            #print("✅ 成功轉換 creds_dict 並建立 gspread client")
             
             # ✅ **將 JSON 存入臨時檔案**
             with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp_file:
