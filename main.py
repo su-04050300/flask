@@ -68,4 +68,5 @@ def handle_message(event):
     )
 
 if __name__ == "__main__":
+    print("✅ Flask 應用正在啟動...")
     app.run(host="0.0.0.0", port=8080)
