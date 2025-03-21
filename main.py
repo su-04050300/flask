@@ -70,16 +70,14 @@ def handle_message(event):
         print(f"🔹 收到使用者訊息: {keyword}")
 
         records = get_sheet_data()
-
-        '''for row in records:
-            if keyword in column.get("歌詞", ""):
-                reply = f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'
-                break'''
         print(records)
-        for keyword in records:
-            if keyword in column.get("歌詞", ""):
+        
+        for row in records:
+            if keyword in row.get("歌詞", ""):
                 reply = f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'
-                break       
+                break
+        
+     
         
                 
         else:
