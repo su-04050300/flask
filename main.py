@@ -55,12 +55,13 @@ def get_sheet_data():
 
         # 開啟指定試算表
         sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"
-        sheet = client.open_by_key(sheet_id)
-
+        spreadsheet = client.open_by_key(sheet_id)
+        worksheet = spreadsheet.sheet1
+        
         print("✅ 成功連線 Google Sheets，開始讀取資料...")
-
-        records = sheet.get_all_records()
-
+        
+        records = worksheet.get_all_records()
+        
         # 加入驗證印出
         if records:
             print(f"📄 已讀取 {len(records)} 筆歌詞資料")
