@@ -25,7 +25,7 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET)
 # === 讀取 Google Sheets 歌詞 ===
 def get_sheet_data():
     try:
-        scopes = ["https://www.googleapis.com/auth/spreadsheets"]
+        scopes ="https://www.googleapis.com/auth/spreadsheets"
         creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
         
 
@@ -45,7 +45,7 @@ def get_sheet_data():
         print("🔍 嘗試解析 GOOGLE_CREDENTIALS_JSON...")
         creds_dict = json.loads(creds_json)
 
-        print("🔍 嘗試解析 GOOGLE_CREDENTIALS_JSON...")
+
         try:
             creds_dict = json.loads(creds_json)
         except json.JSONDecodeError as json_err:
