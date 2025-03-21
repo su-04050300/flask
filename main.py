@@ -45,7 +45,7 @@ def get_sheet_data():
 
         # 開啟指定試算表
         sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"
-        sheet = client.open_by_key(sheet_id).sheet1
+        sheet = client.open_by_key(sheet_id)
 
         print("✅ 成功連線 Google Sheets，開始讀取資料...")
 
