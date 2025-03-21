@@ -32,7 +32,9 @@ def get_sheet_data():
             print("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
             raise Exception("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
 
-        creds_dict = json.loads(creds_json)
+        # 安全處理 creds_json，不確定是否是 str
+        creds_dict = json.loads(creds_json) if isinstance(creds_json, str) else creds_json
+
         creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
         client = gspread.authorize(creds)
 
@@ -77,14 +79,16 @@ def handle_message(event):
         print("🔹🔹🔹🔹")
         print("get record form google sheet")
         print(records)
+        matched = []
+        
         for row in records:
             if keyword in row.get("歌詞", ""):
-                reply = f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'
-                break
-           
+                matched.append(f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}')
+        
+        if matched:
+            reply = "\n\n".join(matched[:3])  # 最多三筆，避免太長
         else:
             reply = "找不到包含這個關鍵字的歌詞喔！"
-
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=reply)
