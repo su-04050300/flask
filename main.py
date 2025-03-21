@@ -42,6 +42,7 @@ def get_sheet_data():
 
         creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
         client = gspread.authorize(creds)
+        print("✅ 成功轉換creds_dict")
 
         # 開啟指定試算表
         sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"
