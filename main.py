@@ -53,6 +53,8 @@ def get_sheet_data():
         try:
             print("🔍 嘗試解析 GOOGLE_CREDENTIALS_JSON...")
             creds_dict = json.loads(creds_json)
+            
+            
             # 確保 private_key 存在且正確
             if "private_key" not in creds_dict:
                 print("❌ 錯誤：GOOGLE_CREDENTIALS_JSON 沒有 'private_key'")
@@ -73,10 +75,22 @@ def get_sheet_data():
 
         try:
             print(f"🔍 'private_key' 第一行: {creds_dict['private_key'].splitlines()[0]}")
-            creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+           ''' creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
             print("🧪 已建立 Credentials 物件")
             client = gspread.authorize(creds)
-            print("✅ 成功轉換 creds_dict 並建立 gspread client")
+            print("✅ 成功轉換 creds_dict 並建立 gspread client")'''
+            
+            # ✅ **將 JSON 存入臨時檔案**
+            with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp_file:
+                temp_file.write(json.dumps(creds_dict))
+                temp_filename = temp_file.name
+    
+            # ✅ **使用 from_service_account_file**
+            creds = Credentials.from_service_account_file(temp_filename, scopes=scopes)
+            client = gspread.authorize(creds)
+    
+            print("✅ gspread 授權成功！")
+            
         except Exception as e:
             print(f"❌ gspread 授權失敗: {e}")
             raise  # 再丟出錯誤讓外層 catch
