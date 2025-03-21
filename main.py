@@ -76,7 +76,7 @@ def handle_message(event):
                 reply = f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'
                 break
         else:
-            reply = "找不到包含這個關鍵字的歌詞喔！"
+            reply = "找不到包含這個關鍵字的歌詞喔！!!"
 
         line_bot_api.reply_message(
             event.reply_token,
