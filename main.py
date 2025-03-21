@@ -28,7 +28,7 @@ def get_sheet_data():
         scopes = ["https://www.googleapis.com/auth/spreadsheets"]
         creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
         
-        print("✅ GOOGLE_CREDENTIALS_JSON 已載入前 100 字:", str(creds_json)[:100])
+        print("✅ GOOGLE_CREDENTIALS_JSON 已載入全部:", str(creds_json)[::])
         print("🔍 型別:", type(creds_json))
 
         if not creds_json:
