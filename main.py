@@ -58,14 +58,14 @@ def get_sheet_data():
         creds_dict = json.loads(creds_json)
         print("🧪 已解析 Key 清單：", creds_dict.keys())
 
-        creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
-        print("🧪 嘗試使用 gspread 授權...")
         try:
+            creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+            print("🧪 已建立 Credentials 物件")
             client = gspread.authorize(creds)
-            print("✅ 成功轉換creds_dict")
+            print("✅ 成功轉換 creds_dict 並建立 gspread client")
         except Exception as e:
             print(f"❌ gspread 授權失敗: {e}")
-            raise
+            raise  # 再丟出錯誤讓外層 catch
 
         # 開啟指定試算表
         sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"
