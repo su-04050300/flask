@@ -155,25 +155,25 @@ def handle_message(event):
 
         records = get_sheet_data()
         print("🔹🔹🔹🔹")
-        print("get record form google sheet")
+        print("get record from google sheet")
         print(records)
+
         matched = []
         
+        # 找出包含關鍵字的歌詞
         for row in records:
             if keyword in row.get("歌詞", ""):
-                matched.append(f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}')
-        
+                matched.append(TextSendMessage(text=f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'))
+
+        # 如果有符合的歌詞，回覆最多 5 則（LINE API 單次最多 5 則訊息）
         if matched:
-            reply = "\n\n".join(matched[:3])  # 最多三筆，避免太長
+            max_reply = 5
+            line_bot_api.reply_message(event.reply_token, matched[:max_reply])
         else:
-            reply = "找不到包含這個關鍵字的歌詞喔！"
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=reply)
-        )
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="找不到包含這個關鍵字的歌詞喔！"))
+
     except Exception as e:
         print(f"❌ 訊息處理錯誤: {e}", file=sys.stderr)
-
 if __name__ == "__main__":
     print("✅ Flask 應用正在啟動...")
     app.run(host="0.0.0.0", port=8080)
