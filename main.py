@@ -163,9 +163,12 @@ def get_song_list_from_sheet2():
         values = sheet.col_values(1)  # 假設歌曲都放在第1欄
         # 去除重複與空值
         unique_songs = sorted(set([v.strip() for v in values if v.strip()]))
+        # 加入 Emoji 標記
+        decorated = [f"🎵 {i+1}. {title}" for i, title in enumerate(unique_songs)]
+        
         print("🔍 所有歌曲:")
         print(unique_songs)
-        return unique_songs
+        return decorated
     except Exception as e:
         print(f"❌ 無法讀取工作表2: {e}")
         return []
