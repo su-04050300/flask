@@ -31,8 +31,8 @@ def get_sheet_data():
         creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
         
 
-        print("🔍 型別:", type(creds_json))
-        print("✅ GOOGLE_CREDENTIALS_JSON 已載入全部:",str(creds_json))
+        #print("🔍 型別:", type(creds_json))
+        #print("✅ GOOGLE_CREDENTIALS_JSON 已載入全部:",str(creds_json))
 
         if not creds_json:
             print("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
@@ -131,8 +131,8 @@ def get_song_list_from_sheet2():
     try:
         scopes = ["https://www.googleapis.com/auth/spreadsheets"]
         creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
-        print("🔍 型別:", type(creds_json))
-        print("✅ GOOGLE_CREDENTIALS_JSON 已載入全部:",str(creds_json))
+        #print("🔍 型別:", type(creds_json))
+        #print("✅ GOOGLE_CREDENTIALS_JSON 已載入全部:",str(creds_json))
 
         if not creds_json:
             print("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
@@ -163,6 +163,8 @@ def get_song_list_from_sheet2():
         values = sheet.col_values(1)  # 假設歌曲都放在第1欄
         # 去除重複與空值
         unique_songs = sorted(set([v.strip() for v in values if v.strip()]))
+        print("🔍 所有歌曲:")
+        print(unique_songs)
         return unique_songs
     except Exception as e:
         print(f"❌ 無法讀取工作表2: {e}")
