@@ -40,14 +40,14 @@ def get_sheet_data():
 
 
         # 修復結尾多餘分號
-        if creds_json.strip().endswith(";}"):
-            print("⚠️ 偵測到 GOOGLE_CREDENTIALS_JSON 結尾有多餘分號，已自動修復")
-            creds_json = creds_json.strip()[:-1]
+        #if creds_json.strip().endswith(";}"):
+         #   print("⚠️ 偵測到 GOOGLE_CREDENTIALS_JSON 結尾有多餘分號，已自動修復")
+          #  creds_json = creds_json.strip()[:-1]
         
-        print("🔍 嘗試解析 GOOGLE_CREDENTIALS_JSON...")
-        print(f"🔹 第一個字元: {repr(creds_json[:1])}")
-        print(f"🔹 最後 10 個字元: {repr(creds_json[-10:])}")
-        print(f"🔹 JSON 長度: {len(creds_json)}")
+        #print("🔍 嘗試解析 GOOGLE_CREDENTIALS_JSON...")
+        #print(f"🔹 第一個字元: {repr(creds_json[:1])}")
+        #print(f"🔹 最後 10 個字元: {repr(creds_json[-10:])}")
+        #print(f"🔹 JSON 長度: {len(creds_json)}")
 
         
 
@@ -125,7 +125,23 @@ def get_sheet_data():
     except Exception as e:
         print(f"❌ Google Sheets 錯誤: {e}")
         return []
-
+        
+def get_song_list_from_sheet2():
+    """讀取工作表2的所有曲目（不重複）"""
+    try:
+        creds = Credentials.from_service_account_info(
+            json.loads(os.getenv("GOOGLE_CREDENTIALS_JSON")),
+            scopes=["https://www.googleapis.com/auth/spreadsheets"]
+        )
+        client = gspread.authorize(creds)
+        sheet = client.open_by_key(SPREADSHEET_ID).worksheet("工作表2")
+        values = sheet.col_values(1)  # 假設歌曲都放在第1欄
+        # 去除重複與空值
+        unique_songs = sorted(set([v.strip() for v in values if v.strip()]))
+        return unique_songs
+    except Exception as e:
+        print(f"❌ 無法讀取工作表2: {e}")
+        return []
 # === LINE Webhook 路由 ===
 @app.route("/callback", methods=["POST"])
 def callback():
@@ -155,8 +171,8 @@ def handle_message(event):
 
         records = get_sheet_data()
         print("🔹🔹🔹🔹")
-        print("get record from google sheet")
-        print(records)
+        #print("get record from google sheet")
+        #print(records)
 
         matched = []
         
