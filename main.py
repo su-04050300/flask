@@ -129,12 +129,36 @@ def get_sheet_data():
 def get_song_list_from_sheet2():
     """讀取工作表2的所有曲目（不重複）"""
     try:
-        creds = Credentials.from_service_account_info(
-            json.loads(os.getenv("GOOGLE_CREDENTIALS_JSON")),
-            scopes=["https://www.googleapis.com/auth/spreadsheets"]
-        )
+        scopes = ["https://www.googleapis.com/auth/spreadsheets"]
+        creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
+        print("🔍 型別:", type(creds_json))
+        print("✅ GOOGLE_CREDENTIALS_JSON 已載入全部:",str(creds_json))
+
+        if not creds_json:
+            print("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
+            raise Exception("❌ GOOGLE_CREDENTIALS_JSON 環境變數未設定")
+        print("🔍 嘗試解析 GOOGLE_CREDENTIALS_JSON...")
+        creds_dict = json.loads(creds_json)
+            
+            
+        # 確保 private_key 存在且正確
+        if "private_key" not in creds_dict:
+            print("❌ 錯誤：GOOGLE_CREDENTIALS_JSON 沒有 'private_key'")
+        elif not creds_dict["private_key"].startswith("-----BEGIN PRIVATE KEY-----"):
+            print(f"⚠️ 'private_key' 開頭異常: {repr(creds_dict['private_key'][:30])}")
+        else:
+            print("✅ 'private_key' 解析正常")
+
+
+        # 修正 private_key 格式
+        creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+
+        # 嘗試授權
+        creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
         client = gspread.authorize(creds)
-        sheet = client.open_by_key(SPREADSHEET_ID).worksheet("工作表2")
+        print("✅ gspread 授權成功！")
+            
+        sheet = client.open_by_key(SPREADSHEET_ID).worksheet("sheet2")
         values = sheet.col_values(1)  # 假設歌曲都放在第1欄
         # 去除重複與空值
         unique_songs = sorted(set([v.strip() for v in values if v.strip()]))
@@ -142,6 +166,8 @@ def get_song_list_from_sheet2():
     except Exception as e:
         print(f"❌ 無法讀取工作表2: {e}")
         return []
+        
+        
 # === LINE Webhook 路由 ===
 @app.route("/callback", methods=["POST"])
 def callback():
