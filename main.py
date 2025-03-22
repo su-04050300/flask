@@ -127,7 +127,7 @@ def get_sheet_data():
         return []
         
 def get_song_list_from_sheet2():
-    """讀取工作表2的所有曲目（不重複）"""
+    #讀取工作表2的所有曲目（不重複）
     try:
         scopes = ["https://www.googleapis.com/auth/spreadsheets"]
         creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
@@ -157,8 +157,9 @@ def get_song_list_from_sheet2():
         creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
         client = gspread.authorize(creds)
         print("✅ gspread 授權成功！")
-            
-        sheet = client.open_by_key(SPREADSHEET_ID).worksheet("sheet2")
+        
+        sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"    
+        sheet = client.open_by_key(sheet_id).worksheet("sheet2")
         values = sheet.col_values(1)  # 假設歌曲都放在第1欄
         # 去除重複與空值
         unique_songs = sorted(set([v.strip() for v in values if v.strip()]))
