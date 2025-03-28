@@ -227,7 +227,7 @@ def handle_message(event):
         for row in records:
             if keyword in row.get("歌詞", ""):
                 #matched.append(TextSendMessage(text=f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'))
-                matched.append(TextSendMessage(text=f'{{row["歌詞"]}')) 
+                matched.append(TextSendMessage(text=f'{row["歌詞"]}'))
 
         # 如果有符合的歌詞，回覆最多 5 則（LINE API 單次最多 5 則訊息）
         if matched:
