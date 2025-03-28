@@ -227,7 +227,7 @@ def handle_message(event):
         for row in records:
             if keyword in row.get("歌詞", ""):
                 #matched.append(TextSendMessage(text=f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'))
-                lyric = row.get("歌詞", ""):
+                lyric = row.get("歌詞", "")
                 if lyric.startswith(keyword):
                     matched.append(TextSendMessage(text=f'{row["歌詞"]}'))
 
