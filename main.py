@@ -225,6 +225,7 @@ def handle_message(event):
         
         # 找出包含關鍵字的歌詞
         for row in records:
+            lyric = row.get("歌詞", ""):
             if keyword in row.get("歌詞", ""):
                 #matched.append(TextSendMessage(text=f'{row["歌名"]} - {row["演唱者"]}\n{row["歌詞"]}'))
                 if lyric.startswith(keyword):
