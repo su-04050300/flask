@@ -161,6 +161,7 @@ def get_song_list_from_sheet2():
         sheet_id = "12iaGClpEjnAw8K9mj6XlXivJdQAvvCykuk7ahcsZyyU"    
         sheet = client.open_by_key(sheet_id).worksheet("sheet2")
         values = sheet.col_values(1)  # 假設歌曲都放在第1欄
+        values = values[1:]
         # 去除重複與空值
         unique_songs = sorted(set([v.strip() for v in values if v.strip()]))
         # 加入 Emoji 標記
@@ -205,7 +206,6 @@ def handle_message(event):
         
         if keyword == "-全部歌曲":
             song_list = get_song_list_from_sheet2()
-            song_list = song_list[1:]
             if song_list:
                 chunks = [song_list[i:i+10] for i in range(0, len(song_list), 10)]  # 避免超過 LINE 訊息長度
                 messages = [TextSendMessage(text="\n".join(chunk)) for chunk in chunks]
