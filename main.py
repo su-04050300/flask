@@ -236,15 +236,14 @@ def handle_message(event):
         # 如果有符合的歌詞，回覆最多 5 則（LINE API 單次最多 5 則訊息）
         if matched:
             max_reply = 5
-            randomA = [random.randint(0, len(matched)) for _ in range(5)]
-            print(randomA)
-            selected = []
-            for i in randomA:
-                selected.append(matched[i])
-            print(f"🔹 隨機排序後:{selected}")
+            count = min(max_reply, len(matched))
+            random_indices = [random.randint(0, len(matched) - 1) for _ in range(count)]
             
-            messages = [TextSendMessage(text=s) for s in selected]
+            print(f"🔹 隨機索引: {random_indices}")
             
+            selected = [matched[i] for i in random_indices]
+            print(f"🔹 隨機選取歌詞: {selected}")
+            messages = [TextSendMessage(text=s[:4900]) for s in selected]  # 加上長度保護
             line_bot_api.reply_message(event.reply_token, messages)
             #line_bot_api.reply_message(event.reply_token, matched[:max_reply])
         else:
