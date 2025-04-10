@@ -8,6 +8,7 @@ import json
 import sys
 import gspread
 from google.oauth2.service_account import Credentials
+import random
 
 import tempfile
 
@@ -235,6 +236,8 @@ def handle_message(event):
         # 如果有符合的歌詞，回覆最多 5 則（LINE API 單次最多 5 則訊息）
         if matched:
             max_reply = 5
+            selected = random.sample(matched, min(5, len(matched)))
+            messages = [TextSendMessage(text=s) for s in selected]
             line_bot_api.reply_message(event.reply_token, matched[:max_reply])
         else:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="找不到包含這個關鍵字的歌詞喔！"))
