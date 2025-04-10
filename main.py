@@ -237,7 +237,7 @@ def handle_message(event):
         if matched:
             max_reply = 5
             randomA = [random.randint(0, len(matched)) for _ in range(5)]
-			print(randomA)
+            print(randomA)
             selected = []
             for i in randomA:
                 selected.append(matched[i])
