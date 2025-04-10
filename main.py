@@ -237,8 +237,12 @@ def handle_message(event):
         if matched:
             max_reply = 5
             selected = random.sample(matched, min(5, len(matched)))
+            print(f"🔹 隨機排序後:{selected}")
+            
             messages = [TextSendMessage(text=s) for s in selected]
-            line_bot_api.reply_message(event.reply_token, matched[:max_reply])
+            
+            line_bot_api.reply_message(event.reply_token, messages)
+            #line_bot_api.reply_message(event.reply_token, matched[:max_reply])
         else:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="找不到包含這個關鍵字的歌詞喔！"))
 
