@@ -236,7 +236,11 @@ def handle_message(event):
         # 如果有符合的歌詞，回覆最多 5 則（LINE API 單次最多 5 則訊息）
         if matched:
             max_reply = 5
-            selected = random.sample(matched, min(5, len(matched)))
+            randomA = [random.randint(0, len(matched)) for _ in range(5)]
+			print(randomA)
+            selected = []
+            for i in randomA:
+                selected.append(matched[i])
             print(f"🔹 隨機排序後:{selected}")
             
             messages = [TextSendMessage(text=s) for s in selected]
