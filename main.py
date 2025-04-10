@@ -243,7 +243,7 @@ def handle_message(event):
             
             selected = [matched[i] for i in random_indices]
             print(f"🔹 隨機選取歌詞: {selected}")
-            messages = [TextSendMessage(text=s[:4900]) for s in selected]  # 加上長度保護
+            messages = [TextSendMessage(text=s.text[:4900]) for s in selected]  # 加上長度保護
             line_bot_api.reply_message(event.reply_token, messages)
             #line_bot_api.reply_message(event.reply_token, matched[:max_reply])
         else:
