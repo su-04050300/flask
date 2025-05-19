@@ -261,7 +261,7 @@ def handle_sticker(event):
     #sticker.package_id
     #sticker.sticker_id
     stickerID=[2734, 2735, 2736, 2737, 2738, 2741, 2742, 2743, 2745, 2747, 2748, 2752, 2759, 2763, 2768, 2771]
-    random_id = random.choice(stickerID)
+    random_id = random.choice(stickerID)+52000000
     print(f"🎉 收到貼圖: packageId={sticker.package_id}, stickerId={sticker.sticker_id}")
     print(f"✅ 回覆貼圖: stickerId={random_id}")
     # 傳回同樣的貼圖（或固定一張你想要的貼圖）
