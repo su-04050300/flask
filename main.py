@@ -260,14 +260,17 @@ def handle_sticker(event):
     sticker = event.message
     #sticker.package_id
     #sticker.sticker_id
+    stickerID=[2734, 2735, 2736, 2737, 2738, 2741, 2742, 2743, 2745, 2747, 2748, 2752, 2759, 2763, 2768, 2771]
+    random_id = random.choice(stickerID)
     print(f"🎉 收到貼圖: packageId={sticker.package_id}, stickerId={sticker.sticker_id}")
-    
+    print(f"✅ 回覆貼圖: stickerId={random_id}")
     # 傳回同樣的貼圖（或固定一張你想要的貼圖）
     line_bot_api.reply_message(
         event.reply_token,
         StickerSendMessage(
             package_id=11537,
-            sticker_id=52002734
+            sticker_id=random_id
+            
         )
     )
 
