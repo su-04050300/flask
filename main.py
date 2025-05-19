@@ -251,6 +251,27 @@ def handle_message(event):
 
     except Exception as e:
         print(f"❌ 訊息處理錯誤: {e}", file=sys.stderr)
+
+# === 處理貼圖訊息 ===
+from linebot.models import StickerMessage, StickerSendMessage
+
+@handler.add(MessageEvent, message=StickerMessage)
+def handle_sticker(event):
+    sticker = event.message
+    #sticker.package_id
+    #sticker.sticker_id
+    print(f"🎉 收到貼圖: packageId={sticker.package_id}, stickerId={sticker.sticker_id}")
+    
+    # 傳回同樣的貼圖（或固定一張你想要的貼圖）
+    line_bot_api.reply_message(
+        event.reply_token,
+        StickerSendMessage(
+            package_id=11537,
+            sticker_id=52002734
+        )
+    )
+
+
 if __name__ == "__main__":
     print("✅ Flask 應用正在啟動...")
     app.run(host="0.0.0.0", port=8080)
