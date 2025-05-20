@@ -9,8 +9,8 @@ import sys
 import gspread
 from google.oauth2.service_account import Credentials
 import random
-
-import tempfile 
+import tempfile
+ 
 
 app = Flask(__name__)
 
@@ -197,14 +197,60 @@ def callback():
 
 
 # === 處理文字訊息 ===
+
+# 儲存猜歌遊戲狀態（使用者ID為 key）
+guess_game_state = {}
+
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     try:
         keyword = event.message.text.strip()
         print(f"🔹 收到使用者訊息: {keyword}")
+        user_id = event.source.user_id
+        print(f"🔹 收到使用者ID: {user_id}")
         
         
-        
+#======== 使用者觸發猜歌遊戲
+        if keyword == "-猜歌名":
+            records = get_sheet_data()  # 取得 Google Sheet 中所有歌詞資料
+            candidate = [r for r in records if r.get("歌詞") and r.get("歌名") and r.get("演唱者")]
+            if not candidate:
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="目前沒有可猜的歌詞資料！"))
+                return
+    
+            question = random.choice(candidate)
+            guess_game_state[user_id] = {
+                "answer": question["歌名"].strip(),
+                "artist": question["演唱者"].strip(),
+                "lyric": question["歌詞"].strip()
+            }
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text=f"🎶 猜猜這是哪首歌：\n\n『{question['歌詞']}』")
+            )
+            return
+    
+        # 使用者選擇放棄或想知道答案
+        if keyword in ["-放棄", "-答案"] and user_id in guess_game_state:
+            game = guess_game_state.pop(user_id)
+            reply = f"👉 正解是：《{game['answer']}》 by {game['artist']} 🎧"
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+            return
+    
+        # 若使用者正在遊戲中，則比對答案
+        if user_id in guess_game_state:
+            game = guess_game_state[user_id]
+            if keyword == game["answer"]:
+                reply = f"🎉 答對了！這首是《{game['answer']}》 by {game['artist']}！"
+                guess_game_state.pop(user_id)  # 清除該使用者狀態
+            else:
+                reply = "🙈 還沒答對，再猜猜看～（輸入 -答案 查看解答）"
+    
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+            return
+    
+#======== 歌詞查詢        
         if keyword == "-全部歌曲":
             song_list = get_song_list_from_sheet2()
             if song_list:
@@ -248,7 +294,7 @@ def handle_message(event):
             #line_bot_api.reply_message(event.reply_token, matched[:max_reply])
         else:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="找不到包含這個關鍵字的歌詞喔！"))
-
+        
     except Exception as e:
         print(f"❌ 訊息處理錯誤: {e}", file=sys.stderr)
 
