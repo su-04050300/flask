@@ -261,7 +261,7 @@ def handle_message(event):
                 TextSendMessage(
                     text=reply,
                     quick_reply=QuickReply(items=[
-                            QuickReplyButton(action=MessageAction(label="再來玩一次", text="-猜歌名"))
+                            QuickReplyButton(action=MessageAction(label="再玩一次~🙌", text="-猜歌名"))
                         ])
                 )
             )
@@ -281,7 +281,7 @@ def handle_message(event):
                     TextSendMessage(
                         text=reply,
                         quick_reply=QuickReply(items=[
-                            QuickReplyButton(action=MessageAction(label="再來玩一次", text="-猜歌名"))
+                            QuickReplyButton(action=MessageAction(label="再玩一次~🙌", text="-猜歌名"))
                         ])
                         )
                 )
