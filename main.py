@@ -246,7 +246,7 @@ def handle_message(event):
             }
 
             # 選擇其他干擾選項
-            options = set([correct_title])
+            options = set(["answer"])
             while len(options) < 4:
                 other = random.choice(candidate)["歌名"].strip()
                 options.add(other)
