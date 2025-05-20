@@ -259,9 +259,7 @@ def handle_message(event):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
             return
             
-        quick_reply=QuickReply(items=[
-            QuickReplyButton(action=MessageAction(label="查看答案", text="-答案"))
-            ])
+
             
         # 若使用者正在遊戲中，則比對答案
         if user_id in guess_game_state:
@@ -269,7 +267,16 @@ def handle_message(event):
             if keyword == game["answer"]:
                 reply = f"🎉 答對了！這首是《{game['answer']}》 by {game['artist']}！"
                 guess_game_state.pop(user_id)  # 清除該使用者狀態
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+               
+                line_bot_api.reply_message(
+                    event.reply_token, 
+                    TextSendMessage(
+                        text=reply,
+                        quick_reply=QuickReply(items=[
+                            QuickReplyButton(action=MessageAction(label="再來玩一次", text="-猜歌名"))
+                        ])
+                        )
+                )
                 
             else:
                 line_bot_api.reply_message(
