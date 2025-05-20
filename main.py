@@ -238,59 +238,36 @@ def handle_message(event):
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="資料不足，無法出題。至少需要4首歌。"))
                 return
 
-            # 隨機選題目
             question = random.choice(candidate)
             guess_game_state[user_id] = {
                 "answer": question["歌名"].strip(),
                 "artist": question["演唱者"].strip(),
                 "lyric": question["歌詞"].strip()
             }
-        
-            # 選擇其他干擾選項
-            options = set([correct_title])
-            while len(options) < 4:
-                other = random.choice(candidate)["歌名"].strip()
-                options.add(other)
-        
-            choices = list(options)
-            random.shuffle(choices)
-        
-            # 記錄遊戲狀態
-            guess_game_state[user_id] = {
-                "answer": answer.lower(),  # 忽略大小寫比對
-                "artist": artist,
-                "lyric": lyric
-            }
-        
-            # 建立 Quick Reply 按鈕
-            quick_reply_buttons = [
-                QuickReplyButton(action=MessageAction(label=title, text=title))
-                for title in choices
-            ]
-        
             line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(
-                    text=f"🎶 猜猜這是哪首歌：\n\n『{lyric}』",
-                    quick_reply=QuickReply(items=quick_reply_buttons)
-                )
+                TextSendMessage(text=f"🎶 猜猜這是哪首歌：\n\n『{question['歌詞']}』")
             )
-            print(f"🔹 game_state: {guess_game_state}")
-            if keyword in ["-答案"] and user_id in guess_game_state:
-                game = guess_game_state.pop(user_id)
-                reply = f"👉 正解是：《{game['answer']}》 by {game['artist']} 🎧"
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
-                return
-        
-            # 若使用者正在遊戲中，則比對答案
-            if user_id in guess_game_state:
-                game = guess_game_state[user_id]
-                if keyword == game["answer"]:
-                    reply = f"🎉 答對了！這首是《{game['answer']}》 by {game['artist']}！"
-                    guess_game_state.pop(user_id)  # 清除該使用者狀態
-                else:
-                    reply = "🙈 還沒答對，再猜猜看～（輸入 -答案 查看解答）"
-                return
+            return
+    
+        # 使用者選擇放棄或想知道答案
+        if keyword in ["-放棄", "-答案"] and user_id in guess_game_state:
+            game = guess_game_state.pop(user_id)
+            reply = f"👉 正解是：《{game['answer']}》 by {game['artist']} 🎧"
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+            return
+    
+        # 若使用者正在遊戲中，則比對答案
+        if user_id in guess_game_state:
+            game = guess_game_state[user_id]
+            if keyword == game["answer"]:
+                reply = f"🎉 答對了！這首是《{game['answer']}》 by {game['artist']}！"
+                guess_game_state.pop(user_id)  # 清除該使用者狀態
+            else:
+                reply = "🙈 還沒答對，再猜猜看～（輸入 -答案 查看解答）"
+    
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+            return
     
 #======== 歌詞查詢        
         if keyword == "-全部歌曲":
