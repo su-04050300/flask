@@ -240,18 +240,39 @@ def handle_message(event):
 
             question = random.choice(candidate)
             guess_game_state[user_id] = {
-                "answer": question["歌名"].strip(),
+                "answer": question["歌名"].strip().lower(),
                 "artist": question["演唱者"].strip(),
                 "lyric": question["歌詞"].strip()
             }
+
+            # 選擇其他干擾選項
+            options = set([correct_title])
+            while len(options) < 4:
+                other = random.choice(candidate)["歌名"].strip()
+                options.add(other)
+        
+            choices = list(options)
+            random.shuffle(choices)
+            
+            # 建立 Quick Reply 按鈕
+            quick_reply_buttons = [
+                QuickReplyButton(action=MessageAction(label=title, text=title))
+                for title in choices
+            ]
+        
             line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(text=f"🎶 猜猜這是哪首歌：\n\n『{question['歌詞']}』")
+                TextSendMessage(
+                    text=f"🎶 猜猜這是哪首歌：\n\n『{lyric}』",
+                    quick_reply=QuickReply(items=quick_reply_buttons)
+                )
             )
+        print(f"🔹 game_state: {guess_game_state}")          
+            
             return
     
         # 使用者選擇放棄或想知道答案
-        if keyword in ["-放棄", "-答案"] and user_id in guess_game_state:
+        if keyword in ["-答案"] and user_id in guess_game_state:
             game = guess_game_state.pop(user_id)
             reply = f"👉 正解是：《{game['answer']}》 by {game['artist']} 🎧"
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
@@ -264,9 +285,9 @@ def handle_message(event):
                 reply = f"🎉 答對了！這首是《{game['answer']}》 by {game['artist']}！"
                 guess_game_state.pop(user_id)  # 清除該使用者狀態
             else:
-                reply = "🙈 還沒答對，再猜猜看～（輸入 -答案 查看解答）"
+                reply = "🙈 還沒答對，再猜猜看～（或輸入 -答案 查看解答）"
     
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=replyquick_reply=QuickReply(items=quick_reply_buttons)))
             return
     
 #======== 歌詞查詢        
