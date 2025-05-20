@@ -266,11 +266,9 @@ def handle_message(event):
                     text=f"🎶 猜猜這是哪首歌：\n\n『{lyric}』",
                     quick_reply=QuickReply(items=quick_reply_buttons)
                 )
-            )
-        print(f"🔹 game_state: {guess_game_state}")          
-            
+            )        
             return
-    
+        print(f"🔹 game_state: {guess_game_state}")      
         # 使用者選擇放棄或想知道答案
         if keyword in ["-答案"] and user_id in guess_game_state:
             game = guess_game_state.pop(user_id)
