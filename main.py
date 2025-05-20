@@ -286,7 +286,7 @@ def handle_message(event):
         if keyword == "-全部歌曲":
             song_list = get_song_list_from_sheet2()
             if song_list:
-                chunks = [song_list[i:i+10] for i in range(0, len(song_list), 10)]  # 避免超過 LINE 訊息長度
+                chunks = [song_list[i:i+100] for i in range(0, len(song_list), 100)]  # 避免超過 LINE 訊息長度
                 messages = [TextSendMessage(text="\n".join(chunk)) for chunk in chunks]
                 line_bot_api.reply_message(event.reply_token, messages)
             else:
