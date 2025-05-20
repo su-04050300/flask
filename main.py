@@ -256,7 +256,15 @@ def handle_message(event):
         if keyword in ["-答案"] and user_id in guess_game_state:
             game = guess_game_state.pop(user_id)
             reply = f"👉 正解是：《{game['answer']}》 by {game['artist']} 🎧"
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+            line_bot_api.reply_message(
+                event.reply_token, 
+                TextSendMessage(
+                    text=reply,
+                    quick_reply=QuickReply(items=[
+                            QuickReplyButton(action=MessageAction(label="再來玩一次", text="-猜歌名"))
+                        ])
+                )
+            )
             return
             
 
