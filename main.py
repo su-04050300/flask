@@ -285,7 +285,13 @@ def handle_message(event):
             else:
                 reply = "🙈 還沒答對，再猜猜看～（或輸入 -答案 查看解答）"
     
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=replyquick_reply=QuickReply(items=quick_reply_buttons)))
+            line_bot_api.reply_message(
+                event.reply_token, 
+                TextSendMessage(
+                    text=reply,
+                    quick_reply=QuickReply(items=quick_reply_buttons)
+                )
+            )
             return
     
 #======== 歌詞查詢        
