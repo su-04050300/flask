@@ -240,9 +240,11 @@ def handle_message(event):
 
             # 隨機選題目
             question = random.choice(candidate)
-            correct_title = question["歌名"].strip()
-            artist = question["演唱者"].strip()
-            lyric = question["歌詞"].strip()
+            guess_game_state[user_id] = {
+                "answer": question["歌名"].strip(),
+                "artist": question["演唱者"].strip(),
+                "lyric": question["歌詞"].strip()
+            }
         
             # 選擇其他干擾選項
             options = set([correct_title])
@@ -253,12 +255,7 @@ def handle_message(event):
             choices = list(options)
             random.shuffle(choices)
         
-            # 記錄遊戲狀態
-            guess_game_state[user_id] = {
-                "answer": correct_title.lower(),  # 忽略大小寫比對
-                "artist": artist,
-                "lyric": lyric
-            }
+          
         
             # 建立 Quick Reply 按鈕
             quick_reply_buttons = [
