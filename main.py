@@ -237,37 +237,7 @@ def handle_message(event):
             if len(candidate) < 4:
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="資料不足，無法出題。至少需要4首歌。"))
                 return
- '''   
-            question = random.choice(candidate)
-            guess_game_state[user_id] = {
-                "answer": question["歌名"].strip(),
-                "artist": question["演唱者"].strip(),
-                "lyric": question["歌詞"].strip()
-            }
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text=f"🎶 猜猜這是哪首歌：\n\n『{question['歌詞']}』")
-            )
-            return
-    
-        # 使用者選擇放棄或想知道答案
-        if keyword in ["-放棄", "-答案"] and user_id in guess_game_state:
-            game = guess_game_state.pop(user_id)
-            reply = f"👉 正解是：《{game['answer']}》 by {game['artist']} 🎧"
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
-            return
-    
-        # 若使用者正在遊戲中，則比對答案
-        if user_id in guess_game_state:
-            game = guess_game_state[user_id]
-            if keyword == game["answer"]:
-                reply = f"🎉 答對了！這首是《{game['answer']}》 by {game['artist']}！"
-                guess_game_state.pop(user_id)  # 清除該使用者狀態
-            else:
-                reply = "🙈 還沒答對，再猜猜看～（輸入 -答案 查看解答）"
-    
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
-            '''
+
             # 隨機選題目
             question = random.choice(candidate)
             correct_title = question["歌名"].strip()
