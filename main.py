@@ -273,6 +273,20 @@ def handle_message(event):
                     quick_reply=QuickReply(items=quick_reply_buttons)
                 )
             )
+        if keyword in ["-答案"] and user_id in guess_game_state:
+            game = guess_game_state.pop(user_id)
+            reply = f"👉 正解是：《{game['answer']}》 by {game['artist']} 🎧"
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+            return
+    
+        # 若使用者正在遊戲中，則比對答案
+        if user_id in guess_game_state:
+            game = guess_game_state[user_id]
+            if keyword == game["answer"]:
+                reply = f"🎉 答對了！這首是《{game['answer']}》 by {game['artist']}！"
+                guess_game_state.pop(user_id)  # 清除該使用者狀態
+            else:
+                reply = "🙈 還沒答對，再猜猜看～（輸入 -答案 查看解答）"
             return
     
 #======== 歌詞查詢        
