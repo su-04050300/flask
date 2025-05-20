@@ -202,7 +202,9 @@ def callback():
 
 # 儲存猜歌遊戲狀態（使用者ID為 key）
 guess_game_state = {}
-
+# 正規化歌名：去除標點、空格、小寫
+def normalize(text):
+    return re.sub(r"[^\w\u4e00-\u9fa5]", "", text).lower()
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -234,13 +236,13 @@ def handle_message(event):
             records = get_sheet_data()  # 取得 Google Sheet 中所有歌詞資料
             candidate = [r for r in records if r.get("歌詞") and r.get("歌名") and r.get("演唱者")]
            
-            if len(candidate) < 4:
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="資料不足，無法出題。至少需要4首歌。"))
+            if len(candidate) < 1:
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="資料不足，無法出題。"))
                 return
-
+                
             question = random.choice(candidate)
             guess_game_state[user_id] = {
-                "answer": question["歌名"].strip(),
+                "answer": question["歌名"].strip().lower(),
                 "artist": question["演唱者"].strip(),
                 "lyric": question["歌詞"].strip()
             }
@@ -256,17 +258,29 @@ def handle_message(event):
             reply = f"👉 正解是：《{game['answer']}》 by {game['artist']} 🎧"
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
             return
-    
+            
+        quick_reply=QuickReply(items=[
+            QuickReplyButton(action=MessageAction(label="查看答案", text="-答案"))
+            ])
+            
         # 若使用者正在遊戲中，則比對答案
         if user_id in guess_game_state:
             game = guess_game_state[user_id]
             if keyword == game["answer"]:
                 reply = f"🎉 答對了！這首是《{game['answer']}》 by {game['artist']}！"
                 guess_game_state.pop(user_id)  # 清除該使用者狀態
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+                
             else:
-                reply = "🙈 還沒答對，再猜猜看～（輸入 -答案 查看解答）"
-    
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                        text="🙈 還沒答對，再猜猜看～",
+                        quick_reply=QuickReply(items=[
+                            QuickReplyButton(action=MessageAction(label="查看答案", text="-答案"))
+                        ])
+                    )
+                )
             return
 #======== 歌詞查詢        
         if keyword == "-全部歌曲":
