@@ -2,6 +2,8 @@ from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import QuickReply, QuickReplyButton, MessageAction
+
 
 import os
 import json
@@ -231,10 +233,11 @@ def handle_message(event):
         if keyword == "-猜歌名":
             records = get_sheet_data()  # 取得 Google Sheet 中所有歌詞資料
             candidate = [r for r in records if r.get("歌詞") and r.get("歌名") and r.get("演唱者")]
-            if not candidate:
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="目前沒有可猜的歌詞資料！"))
+           
+            if len(candidate) < 4:
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="資料不足，無法出題。至少需要4首歌。"))
                 return
-    
+ '''   
             question = random.choice(candidate)
             guess_game_state[user_id] = {
                 "answer": question["歌名"].strip(),
@@ -264,6 +267,42 @@ def handle_message(event):
                 reply = "🙈 還沒答對，再猜猜看～（輸入 -答案 查看解答）"
     
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+            '''
+            # 隨機選題目
+            question = random.choice(candidate)
+            correct_title = question["歌名"].strip()
+            artist = question["演唱者"].strip()
+            lyric = question["歌詞"].strip()
+        
+            # 選擇其他干擾選項
+            options = set([correct_title])
+            while len(options) < 4:
+                other = random.choice(candidate)["歌名"].strip()
+                options.add(other)
+        
+            choices = list(options)
+            random.shuffle(choices)
+        
+            # 記錄遊戲狀態
+            guess_game_state[user_id] = {
+                "answer": correct_title.lower(),  # 忽略大小寫比對
+                "artist": artist,
+                "lyric": lyric
+            }
+        
+            # 建立 Quick Reply 按鈕
+            quick_reply_buttons = [
+                QuickReplyButton(action=MessageAction(label=title, text=title))
+                for title in choices
+            ]
+        
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text=f"🎶 猜猜這是哪首歌：\n\n『{lyric}』",
+                    quick_reply=QuickReply(items=quick_reply_buttons)
+                )
+            )
             return
     
 #======== 歌詞查詢        
