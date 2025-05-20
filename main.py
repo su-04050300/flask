@@ -257,7 +257,7 @@ def handle_message(event):
         
             # 記錄遊戲狀態
             guess_game_state[user_id] = {
-                "answer": correct_title.lower(),  # 忽略大小寫比對
+                "answer": answer.lower(),  # 忽略大小寫比對
                 "artist": artist,
                 "lyric": lyric
             }
