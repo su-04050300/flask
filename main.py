@@ -330,7 +330,7 @@ def handle_message(event):
         if matched:
             max_reply = 5
             count = min(max_reply, len(matched))
-            random_indices = [random.randint(0, len(matched) - 1) for _ in range(count)]
+            random_indices = [random.sample(0, len(matched) - 1) for _ in range(count)]
             
             print(f"🔹 隨機索引: {random_indices}")
             
